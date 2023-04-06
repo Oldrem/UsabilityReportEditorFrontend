@@ -37,7 +37,7 @@ const Header = () => {
                         <NavLink to='/'>Home</NavLink>
                         <NavLink to='/login'>Login</NavLink>
                         <NavLink to='/register'>Register</NavLink>
-                        <NavLink to='/user-profile'>Profile</NavLink>
+                        <NavLink to='/user-profile'>Report</NavLink>
                     </Col>
                     <Col sm={9} className={'text-end '}>
                         {usernameText}

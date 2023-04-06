@@ -7,7 +7,7 @@ import {
 import Header from '../components/Header'
 import LoginPage from '../pages/LoginPage'
 import RegistrationPage from '../pages/RegistrationPage'
-import ProfilePage from '../pages/ProfilePage'
+import ProfilePage from '../pages/ReportEditor'
 import HomePage from '../pages/HomePage'
 import ProtectedRoute from '../routes/ProtectedRoute'
 import '../App.css';
