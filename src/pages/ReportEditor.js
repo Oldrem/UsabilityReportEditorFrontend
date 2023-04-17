@@ -19,8 +19,8 @@ const ReportEditor = () => {
     const tree = loading ? <Spinner/> : <Tree data={reportData[0].blocks}/>
     return (
         <Container fluid>
-            <Row>
-                <Col sm={9} className={'text-start'}>
+            <Row className={"h-100"}>
+                <Col sm={10} className={'text-start'}>
                     <div>
                         <span>
                             Welcome <strong>{userInfo?.username}!</strong>
@@ -30,8 +30,10 @@ const ReportEditor = () => {
                         </div>
                     </div>
                 </Col>
-                <Col sm={3}>
-                    Side-bar will be there
+                <Col sm={2}>
+                    <div className={"h-100"} style={{paddingLeft: "10px", borderLeft: "3px black solid"}}>
+                        Side-bar will be there
+                    </div>
                 </Col>
             </Row>
         </Container>
