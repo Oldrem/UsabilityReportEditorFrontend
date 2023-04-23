@@ -15,16 +15,12 @@ const ReportEditor = () => {
     useEffect(() => {
 
     }, []);
-    console.log(reportData[0].blocks)
     const tree = loading ? <Spinner/> : <Tree data={reportData[0].blocks}/>
     return (
         <Container fluid>
             <Row className={"h-100"}>
-                <Col sm={10} className={'text-start'}>
+                <Col sm={10}>
                     <div>
-                        <span>
-                            Welcome <strong>{userInfo?.username}!</strong>
-                        </span>
                         <div>
                             {tree}
                         </div>
