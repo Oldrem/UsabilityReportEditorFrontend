@@ -10,7 +10,7 @@ import RegistrationPage from '../pages/RegistrationPage'
 import ProfilePage from '../pages/ReportEditor'
 import HomePage from '../pages/HomePage'
 import ProtectedRoute from '../routes/ProtectedRoute'
-import '../App.css';
+import '../styles/App.css';
 
 function App() {
   return (
