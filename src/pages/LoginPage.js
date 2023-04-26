@@ -24,7 +24,6 @@ const LoginScreen = () => {
 
     const submitForm = (data) => {
         dispatch(userLogin(data))
-        dispatch(getReportBlocksById({id: 1}))
     }
 
     return (

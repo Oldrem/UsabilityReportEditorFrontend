@@ -5,16 +5,24 @@ import Tree from "../components/tree/DocumentTree";
 import {useEffect, useState} from "react";
 import {getReportBlocksById} from "../features/report/reportActions";
 import {Col, Container, Row, Spinner} from "react-bootstrap";
+import { useParams } from 'react-router';
+import {useForm} from "react-hook-form";
+import {setCredentials} from "../features/auth/authSlice";
 
 const ReportEditor = () => {
-    const { userInfo } = useSelector((state) => state.auth)
+    const dispatch = useDispatch();
+    const { id } = useParams();
     const { loading, reportData, error } = useSelector(
         (state) => state.report
     )
 
     useEffect(() => {
-
+        dispatch(getReportBlocksById({id: id}));
     }, []);
+
+    useEffect(() => {
+    }, [reportData])
+
     const tree = loading ? <Spinner/> : <Tree data={reportData[0].blocks}/>
     return (
         <Container fluid>
@@ -28,7 +36,7 @@ const ReportEditor = () => {
                 </Col>
                 <Col sm={2}>
                     <div className={"h-100"} style={{paddingLeft: "10px", borderLeft: "3px black solid"}}>
-                        Side-bar will be there
+                        Side-bar will be there. Report id: {id}
                     </div>
                 </Col>
             </Row>

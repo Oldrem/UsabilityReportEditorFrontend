@@ -35,7 +35,7 @@ const Header = () => {
                 <Row className={'navigation align-items-center'}>
                     <Col sm={2} className={'text-start '}>
                         <NavLink className={'header-link'} to='/'>Home</NavLink>
-                        <NavLink className={'header-link'} to='/user-profile'>Report</NavLink>
+                        <NavLink className={'header-link'} to='/report/1'>Report</NavLink>
                     </Col>
                     <Col sm={7} className={'text-end'}>
                     </Col>

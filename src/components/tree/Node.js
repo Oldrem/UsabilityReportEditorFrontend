@@ -11,8 +11,8 @@ const Node = ({ item, hasChildren, level, onToggle }) => {
         <div>
             <Row>
                 {[...Array(level)].map((x, i) =>
-                    <Col style = {{maxWidth: "30px", padding: "0px"}}>
-                         <div key={i} className={"document-branch h-100"} style = {{padding: "0px"}} />
+                    <Col key={i} style = {{maxWidth: "30px", padding: "0px"}}>
+                         <div className={"document-branch h-100"} style = {{padding: "0px"}} />
                     </Col>
                 )}
                 <Col  style={{padding: "0px"}}>
