@@ -15,12 +15,19 @@ body {
   height: 100%;
 }
 
+#root {
+  /*background-color: rgba(0, 0, 0, 0.04);*/
+}
+
 html {
   font-size: 18px;
+  /*background-color: rgba(0, 0, 0, 0.04);*/
 }
 
 .container {
+  background-color: #ffffff;
   max-width: 99%;
+  height: 100%;
   margin-right: auto;
   margin-left: auto;
   padding: 1rem;
@@ -58,8 +65,23 @@ html {
   border-left:#12a8df 2px solid;
 }
 
+.report-editor-body{
+  /*border-left: 2px solid rgba(77, 75, 75, 0.09);*/
+}
+
+.report-card{
+  -webkit-transition: background-color 300ms linear;
+  -moz-transition: background-color 300ms linear;
+  -o-transition: background-color 300ms linear;
+  transition: background-color 300ms linear;
+  cursor: pointer;
+}
+
+.report-card:hover{
+  background-color: rgba(176, 223, 231, 0.18);
+}
+
 .report-block{
-  margin-top: 30px;
 }
 
 .report-block-editing{
@@ -103,8 +125,24 @@ form {
 }
 
 .icon{
+  -webkit-transition: filter 200ms linear;
+  -moz-transition: filter 200ms linear;
+  -o-transition: filter 200ms linear;
+  transition: filter 200ms linear;
+}
+
+.icon-small{
+  width: 1.2em;
+  height: 1.2em;
+}
+
+.icon-medium{
   width: 1.5em;
   height: 1.5em;
+}
+
+.icon:hover{
+  filter: brightness(85%);
 }
 
 .img-flip{
@@ -116,6 +154,64 @@ form {
 
 form button {
   width: 100%;
+}
+
+.add-report-block-button {
+  display: inline-block;
+  border: none;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  cursor: pointer;
+  height: 50px;
+  width: 50px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2);
+  background-color: #16b8f3;
+  border-radius: 100%;
+  -webkit-transition: background-color 200ms linear;
+  -moz-transition: background-color 200ms linear;
+  -o-transition: background-color 200ms linear;
+  transition: background-color 200ms linear;
+}
+
+.add-report-block-button:hover {
+  background-color: #07a1e1;
+}
+
+.add-report-block-button:active{
+  background-color: #027cad;
+}
+
+.report-tooltip-container{
+}
+
+.report-tooltip{
+  opacity: 0;
+  transition: opacity 0.5s;
+  width: 80px;
+  background-color: rgba(255, 255, 255, 0);
+  color: #fff;
+  border-radius: 4px;
+  position: absolute;
+  z-index: 1;
+}
+
+.report-block-tooltip-hitbox{
+  width: 112px;
+  height: 60%;
+  top: -10px;
+  left: -85px;
+  z-index: 1;
+}
+
+.report-block-tooltip-hitbox:hover .report-tooltip{
+  opacity: 1;
+}
+
+.report-block-tooltip-hitbox .report-tooltip{
+  top: 12px;
+  left: 12px;
 }
 
 /* responsive styles */

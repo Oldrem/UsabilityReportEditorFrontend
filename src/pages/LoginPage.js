@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { userLogin } from '../features/auth/authActions'
-import {getReportBlocksById} from "../features/report/reportActions";
+import {getReportBlocksById} from "../features/block/reportBlockActions";
 import Error from '../components/Error'
 import {Spinner} from "react-bootstrap";
 

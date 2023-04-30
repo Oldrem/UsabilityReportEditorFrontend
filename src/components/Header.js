@@ -30,24 +30,23 @@ const Header = () => {
         usernameText = <span>Logged in as {userInfo.username}</span>
     }
     return (
-        <Container fluid>
+        <Container fluid className={"p-0"}>
         <header>
                 <Row className={'navigation align-items-center'}>
-                    <Col sm={2} className={'text-start '}>
+                    <Col xs={2} sm={2} className={'text-start p-0 m-0'}>
                         <NavLink className={'header-link'} to='/'>Home</NavLink>
-                        <NavLink className={'header-link'} to='/report/1'>Report</NavLink>
                     </Col>
-                    <Col sm={7} className={'text-end'}>
+                    <Col xs={0} sm={7} className={'text-end'}>
                     </Col>
-                    <Col sm={3} className={"text-end"} >
+                    <Col xs={10} sm={3} className={"text-end p-0"} >
                         <div className={"d-inline me-2"}>{usernameText}</div>
                          {userInfo.username == null || !userInfo ? (
                              <div className={"d-inline"}>
                                  <Link to='/login' >
-                                     <button className={'px-1 ms-0 me-1 button'}>Sign In</button>
+                                     <button className={'ms-0 me-1 button'}>Sign In</button>
                                  </Link>
                                  <Link to='/register'>
-                                     <button className={'px-1 mx-0 button mw-100'}>Sign Up</button>
+                                     <button className={'mx-0 button mw-100'}>Sign Up</button>
                                  </Link>
                              </div>
                          ) : (

@@ -4,21 +4,19 @@ import { createAsyncThunk } from '@reduxjs/toolkit'
 const backendURL = 'http://localhost:8080/api'
 
 
-export const getAllUserReports = createAsyncThunk(
-    'reports',
+export const getReportBlocksById = createAsyncThunk(
+    'reports/blocks',
     async ({id}, { rejectWithValue }) => {
         try {
             // configure header's Content-Type as JSON
-            const token = localStorage.getItem('userToken');
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
-                    'authorization': `Bearer ${token}`
                 },
             }
 
             const { data } = await axios.get(
-                `${backendURL}/reports`,
+                `${backendURL}/blocks/reports/${id}`,
                 config
             )
 
@@ -33,53 +31,51 @@ export const getAllUserReports = createAsyncThunk(
     }
 )
 
-export const createReport = createAsyncThunk(
-    'reports/create',
-    async ({report}, { rejectWithValue }) => {
+export const updateReportBlock = createAsyncThunk(
+    'reports/blocks/update',
+    async ({id, reportBlock}, { rejectWithValue }) => {
         try {
             // configure header's Content-Type as JSON
-            const token = localStorage.getItem('userToken');
             const config = {
                 headers: {
                     'Content-Type': 'application/json',
-                    'authorization': `Bearer ${token}`
-                },
-            }
-
-            const { data } = await axios.post(
-                `${backendURL}/reports`, {
-                    report
-                },
-                config
-            )
-
-            return data
-        } catch (error) {
-            if (error.response && error.response.data.message) {
-                return rejectWithValue(error.response.data.message)
-            } else {
-                return rejectWithValue(error.message)
-            }
-        }
-    }
-)
-
-export const updateReport = createAsyncThunk(
-    'reports/update',
-    async ({id, report}, { rejectWithValue }) => {
-        try {
-            // configure header's Content-Type as JSON
-            const token = localStorage.getItem('userToken');
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': `Bearer ${token}`
                 },
             }
 
             const { data } = await axios.put(
-                `${backendURL}/reports/${id}`, {
-                    report
+                `${backendURL}/blocks/${id}`, {
+                    reportBlock
+                },
+                config
+            )
+            // store user's token in local storage
+
+            return data
+        } catch (error) {
+            // return custom error message from API if any
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data.message)
+            } else {
+                return rejectWithValue(error.message)
+            }
+        }
+    }
+)
+
+export const createReportBlock = createAsyncThunk(
+    'reports/blocks/create',
+    async ({reportBlock}, { rejectWithValue }) => {
+        try {
+            // configure header's Content-Type as JSON
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            }
+
+            const { data } = await axios.post(
+                `${backendURL}/blocks`, {
+                    reportBlock
                 },
                 config
             )
@@ -95,8 +91,8 @@ export const updateReport = createAsyncThunk(
     }
 )
 
-export const deleteReport = createAsyncThunk(
-    'reports/delete',
+export const deleteReportBlock = createAsyncThunk(
+    'reports/blocks/delete',
     async ({id}, { rejectWithValue }) => {
         try {
             // configure header's Content-Type as JSON
@@ -109,12 +105,45 @@ export const deleteReport = createAsyncThunk(
             }
 
             const { data } = await axios.delete(
-                `${backendURL}/reports/${id}`,
+                `${backendURL}/blocks/${id}`,
                 config
             )
+            // store user's token in local storage
 
             return id
         } catch (error) {
+            // return custom error message from API if any
+            if (error.response && error.response.data.message) {
+                return rejectWithValue(error.response.data.message)
+            } else {
+                return rejectWithValue(error.message)
+            }
+        }
+    }
+)
+
+export const deleteReportBlockWithChildren = createAsyncThunk(
+    'reports/blocks/delete/children',
+    async ({id}, { rejectWithValue }) => {
+        try {
+            // configure header's Content-Type as JSON
+            const token = localStorage.getItem('userToken');
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'authorization': `Bearer ${token}`
+                },
+            }
+
+            const { data } = await axios.delete(
+                `${backendURL}/blocks/${id}/children`,
+                config
+            )
+            // store user's token in local storage
+
+            return id
+        } catch (error) {
+            // return custom error message from API if any
             if (error.response && error.response.data.message) {
                 return rejectWithValue(error.response.data.message)
             } else {
