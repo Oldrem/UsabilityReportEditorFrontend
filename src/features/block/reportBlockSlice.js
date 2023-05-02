@@ -12,6 +12,73 @@ const reportBlockSlice = createSlice({
     name: 'reportBlock',
     initialState,
     reducers: {
+        moveReportBlock: (state, action) => {
+            const { movedBlock, targetBlock, isBefore } = action.payload;
+            const firstId = movedBlock.id;
+            const secondId = targetBlock.id;
+            const secondParentId = targetBlock.parentId;
+
+            let firstNode = null;
+            let secondNode = null;
+            let secondNodeParent = null;
+
+            const findNodes = (node) => {
+                if (node.id === firstId) {
+                    firstNode = node;
+                }
+                if (node.id === secondId) {
+                    secondNode = node;
+                }
+
+                if (node.id === secondParentId) {
+                    secondNodeParent = node;
+                }
+                if (!firstNode || !secondNode) {
+                    node.children.forEach(findNodes);
+                }
+            }
+
+            const deleteNodeWithChildren = (nodes) => {
+                return produce(nodes, (draftNodes) => {
+                    for (let i = draftNodes.length - 1; i >= 0; i--) {
+                        const node = draftNodes[i];
+                        if (node.id === firstId) {
+                            console.log("Matching id: " + node.id)
+                            draftNodes.splice(i, 1);
+                        } else if (node.children) {
+                            node.children = deleteNodeWithChildren(node.children);
+                        }
+                    }
+                });
+            };
+
+            state.reportData[0].blocks.forEach(findNodes);
+            state.reportData[0].blocks = deleteNodeWithChildren(state.reportData[0].blocks, firstId);
+            console.log(firstNode.title)
+            console.log(secondNode.title)
+            console.log(secondNodeParent.title)
+            if (secondNodeParent != null){
+                let index = secondNodeParent.children.indexOf(secondNode);
+                if (!isBefore){
+                    index += 1;
+                }
+                console.log(index);
+                firstNode.parentId = secondNodeParent.id;
+                console.log(firstNode.parentId)
+                secondNodeParent.children.splice(index, 0, firstNode);
+                console.log(secondNodeParent.children.indexOf(firstNode));
+            }
+            else {
+                let index = state.reportData[0].blocks.indexOf(secondNode);
+                if (!isBefore){
+                    index += 1;
+                }
+                console.log(index);
+                firstNode.parentId = null;
+                state.reportData[0].blocks.splice(index, 0, firstNode);
+            }
+            console.log(state.reportData[0].blocks);
+        },
     },
     extraReducers: {
         [getReportBlocksById.pending]: (state) => {
@@ -31,10 +98,9 @@ const reportBlockSlice = createSlice({
             state.error = null
         },
         [updateReportBlock.fulfilled]: (state, { payload }) => {
-            const id = payload[0].id;
             const updateNode = (nodes) => {
                 return nodes.map((node) => {
-                    if (node.id === id) {
+                    if (node.id === payload[0].id) {
                         return { ...node, ...payload[0] };
                     }
                     if (node.children) {
@@ -138,8 +204,6 @@ const reportBlockSlice = createSlice({
             state.error = null
         },
         [deleteReportBlockWithChildren.fulfilled]: (state, { payload }) => {
-
-            console.log(payload);
             const deleteNode = (nodes) => {
                 return produce(nodes, (draftNodes) => {
                     for (let i = draftNodes.length - 1; i >= 0; i--) {
@@ -153,12 +217,11 @@ const reportBlockSlice = createSlice({
                     }
                 });
             };
-
             return {
                 ...state,
                 reportData: [
                     {
-                        blocks: deleteNode(state.reportData[0].blocks),
+                        blocks: deleteNode(state.reportData[0].blocks, payload),
                     },
                 ],
             };
@@ -169,4 +232,6 @@ const reportBlockSlice = createSlice({
     }
 })
 
-export default reportBlockSlice.reducer
+export const { moveReportBlock } = reportBlockSlice.actions;
+
+export default reportBlockSlice.reducer;

@@ -62,7 +62,7 @@ html {
 }
 
 .document-branch{
-  border-left:#12a8df 2px solid;
+  border-left: rgba(5, 75, 103, 0.29) 2px solid;
 }
 
 .report-editor-body{
@@ -197,11 +197,17 @@ form button {
   z-index: 1;
 }
 
+.drag-and-drop{
+  top: 65% !important;
+  left: 63px !important;
+  width: 20px;
+}
+
 .report-block-tooltip-hitbox{
-  width: 112px;
+  width: 85px !important;
   height: 60%;
   top: -10px;
-  left: -85px;
+  left: -88px;
   z-index: 1;
 }
 
@@ -213,6 +219,11 @@ form button {
   top: 12px;
   left: 12px;
 }
+
+.ql-container.ql-snow {
+  border: none !important;
+}
+
 
 /* responsive styles */
 /* md */
@@ -235,5 +246,4 @@ form button {
     max-width: 55%;
   }
 }
-
 

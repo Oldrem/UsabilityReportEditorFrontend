@@ -4,6 +4,8 @@ import './index.css';
 import App from './app/App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux'
+import { HTML5Backend } from 'react-dnd-html5-backend'
+import { DndProvider } from 'react-dnd'
 import store from './app/store'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,9 +16,11 @@ import  "react-quill/dist/quill.core.css";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-      <Provider store={store}>
-          <App />
-      </Provider>
+      <DndProvider backend={HTML5Backend}>
+          <Provider store={store}>
+              <App />
+          </Provider>
+      </DndProvider>
   </React.StrictMode>
 );
 

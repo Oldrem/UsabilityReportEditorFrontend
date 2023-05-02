@@ -1,13 +1,14 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import {Link, NavLink} from 'react-router-dom'
+import {Link, NavLink, useLocation, matchPath} from 'react-router-dom'
 import { useGetUserDetailsQuery } from '../features/auth/authService'
 import { logout, setCredentials } from '../features/auth/authSlice'
 import '../styles/header.css'
-import {Button, Col, Container, Row} from "react-bootstrap";
+import {Button, Col, Container, Nav, Navbar, NavDropdown, Row} from "react-bootstrap";
 
 const Header = () => {
     const { userInfo } = useSelector((state) => state.auth)
+    const location = useLocation()
     const dispatch = useDispatch()
 
     // automatically authenticate user if token is found
@@ -21,41 +22,48 @@ const Header = () => {
 
     let usernameText;
     if (isFetching) {
-        usernameText = <span>Fetching your profile...</span>
+        usernameText = <span>Аутентификация...</span>
     }
     else if (userInfo.username == null){
-        usernameText = <span>You're not logged in</span>
+        usernameText = <span>Вы не авторизированы:</span>
     }
     else {
-        usernameText = <span>Logged in as {userInfo.username}</span>
+        usernameText = <span>Пользователь: {userInfo.username}.</span>
     }
+    const isViewingReport = matchPath({
+        path: "/report/:id"
+    }, location.pathname)
     return (
-        <Container fluid className={"p-0"}>
-        <header>
-                <Row className={'navigation align-items-center'}>
-                    <Col xs={2} sm={2} className={'text-start p-0 m-0'}>
-                        <NavLink className={'header-link'} to='/'>Home</NavLink>
-                    </Col>
-                    <Col xs={0} sm={7} className={'text-end'}>
-                    </Col>
-                    <Col xs={10} sm={3} className={"text-end p-0"} >
-                        <div className={"d-inline me-2"}>{usernameText}</div>
-                         {userInfo.username == null || !userInfo ? (
-                             <div className={"d-inline"}>
-                                 <Link to='/login' >
-                                     <button className={'ms-0 me-1 button'}>Sign In</button>
-                                 </Link>
-                                 <Link to='/register'>
-                                     <button className={'mx-0 button mw-100'}>Sign Up</button>
-                                 </Link>
-                             </div>
-                         ) : (
-                             <button className='button' onClick={() => dispatch(logout())}>Logout</button>
-                         )}
-                    </Col>
-                </Row>
-        </header>
-        </Container>
+            <Navbar bg="light" sticky={"top"} className={"pe-3"}>
+
+                        <Nav className="me-auto">
+                            <Nav.Link as={Link} to="/" className={"home-link px-3"}>Home</Nav.Link>
+                            {!!isViewingReport &&
+                            <>
+                                <NavDropdown title="Импорт" className={"ps-3"}>
+                                    <NavDropdown.Item href="#action/3.1">Импорт гипотезы</NavDropdown.Item>
+                                    <NavDropdown.Item href="#action/3.2">Импорт задачи</NavDropdown.Item>
+                                </NavDropdown>
+                                <NavDropdown title="Экспорт">
+                                    <NavDropdown.Item href="#action/3.1">Экспорт страницы в PDF</NavDropdown.Item>
+                                    <NavDropdown.Item href="#action/3.2">Экспорт документа в PDF</NavDropdown.Item>
+                                </NavDropdown>
+                            </>
+                            }
+                        </Nav>
+                        <Nav>
+                            <Navbar.Text className={"d-none d-sm-block"}>
+                                {usernameText}
+                            </Navbar.Text>
+                            {userInfo.username == null || !userInfo ?
+                                <>
+                                    <Nav.Link as={Link} className={"text-decoration-underline"} to='/register'>Регистрация</Nav.Link>
+                                    <Nav.Link as={Link} className={"text-decoration-underline"} to='/login'>Войти</Nav.Link>
+                                </>
+                                : <Nav.Link as={Link} to="/login" className={"text-decoration-underline"} onClick={() => dispatch(logout())}>Выйти</Nav.Link> }
+
+                        </Nav>
+            </Navbar>
     )
 }
 

@@ -9,17 +9,7 @@ const Node = ({ item, hasChildren, level, onToggle }) => {
     //console.log(item.title + ", level: " + level + ", margin = " + margin + ", padding = " + padding)
     return (
         <div>
-
-            <Row className={"m-0"}>
-                {[...Array(level)].map((x, i) =>
-                    <Col key={i} style = {{maxWidth: "30px", padding: "0px"}}>
-                         <div className={"document-branch h-100"} style = {{padding: "0px"}} />
-                    </Col>
-                )}
-                <Col  style={{padding: "0px"}}>
-                    <ReportBlock item={item} hasChildren={hasChildren} onToggle={onToggle}/>
-                </Col>
-            </Row>
+            <ReportBlock item={item} hasChildren={hasChildren} onToggle={onToggle} level={level}/>
         </div>
     );
 };
