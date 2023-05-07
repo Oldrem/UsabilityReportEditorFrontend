@@ -18,7 +18,9 @@ function App() {
           <Header />
           <main className='container content'>
               <Routes>
-                  <Route path='/' element={<HomePage />} />
+                  <Route element={<ProtectedRoute />}>
+                      <Route path='/' element={<HomePage />} />
+                  </Route>
                   <Route path='/login' element={<LoginPage />} />
                   <Route path='/register' element={<RegistrationPage />} />
                   <Route element={<ProtectedRoute />}>

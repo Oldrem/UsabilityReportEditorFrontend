@@ -8,7 +8,7 @@ const ProtectedRoute = () => {
     if (userInfo.username == null || !userInfo.username) {
         return (
             <div className='unauthorized'>
-                <h1>Unauthorized :(</h1>
+                <h1>Unauthorized</h1>
                 <span>
           <NavLink to='/login'>Login</NavLink> to gain access
         </span>

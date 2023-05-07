@@ -1,6 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 import {createReportBlock, getReportBlocksById, updateReportBlock, deleteReportBlock, deleteReportBlockWithChildren} from "./reportBlockActions";
 import produce from 'immer';
+import {forEach} from "react-bootstrap/ElementChildren";
+
+function arrayMove(arr, old_index, new_index) {
+    if (new_index >= arr.length) {
+        let k = new_index - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing
+};
 
 const initialState = {
     loading: true,
@@ -22,19 +34,40 @@ const reportBlockSlice = createSlice({
             let secondNode = null;
             let secondNodeParent = null;
 
-            const findNodes = (node) => {
-                if (node.id === firstId) {
-                    firstNode = node;
-                }
+            const checkIfSecondNodeIsChild = (node) => {
                 if (node.id === secondId) {
                     secondNode = node;
                 }
+                else{
+                    if (node.children){
+                        node.children.forEach(checkIfSecondNodeIsChild);
+                    }
+                }
+            }
 
+            const findFirstNode = (node) => {
+                if (node.id === firstId) {
+                    firstNode = node;
+                }
+
+                if (!firstNode || !secondNode) {
+                    if (node.children){
+                        node.children.forEach(findFirstNode);
+                    }
+                }
+            }
+
+            const findSecondNodeAndParent = (node) => {
+                if (node.id === secondId) {
+                    secondNode = node;
+                }
                 if (node.id === secondParentId) {
                     secondNodeParent = node;
                 }
-                if (!firstNode || !secondNode) {
-                    node.children.forEach(findNodes);
+                if (!secondNodeParent || !secondNode) {
+                    if (node.children){
+                        node.children.forEach(findSecondNodeAndParent);
+                    }
                 }
             }
 
@@ -43,7 +76,6 @@ const reportBlockSlice = createSlice({
                     for (let i = draftNodes.length - 1; i >= 0; i--) {
                         const node = draftNodes[i];
                         if (node.id === firstId) {
-                            console.log("Matching id: " + node.id)
                             draftNodes.splice(i, 1);
                         } else if (node.children) {
                             node.children = deleteNodeWithChildren(node.children);
@@ -52,21 +84,22 @@ const reportBlockSlice = createSlice({
                 });
             };
 
-            state.reportData[0].blocks.forEach(findNodes);
-            state.reportData[0].blocks = deleteNodeWithChildren(state.reportData[0].blocks, firstId);
-            console.log(firstNode.title)
-            console.log(secondNode.title)
-            console.log(secondNodeParent.title)
+            state.reportData[0].blocks.forEach(findFirstNode);
+            if (firstNode.children){
+                firstNode.children.forEach(checkIfSecondNodeIsChild);
+                if (secondNode) {
+                    return;
+                }
+            }
+
+            state.reportData[0].blocks = deleteNodeWithChildren(state.reportData[0].blocks);
+            state.reportData[0].blocks.forEach(findSecondNodeAndParent);
             if (secondNodeParent != null){
                 let index = secondNodeParent.children.indexOf(secondNode);
                 if (!isBefore){
                     index += 1;
                 }
-                console.log(index);
-                firstNode.parentId = secondNodeParent.id;
-                console.log(firstNode.parentId)
                 secondNodeParent.children.splice(index, 0, firstNode);
-                console.log(secondNodeParent.children.indexOf(firstNode));
             }
             else {
                 let index = state.reportData[0].blocks.indexOf(secondNode);
@@ -77,7 +110,6 @@ const reportBlockSlice = createSlice({
                 firstNode.parentId = null;
                 state.reportData[0].blocks.splice(index, 0, firstNode);
             }
-            console.log(state.reportData[0].blocks);
         },
     },
     extraReducers: {

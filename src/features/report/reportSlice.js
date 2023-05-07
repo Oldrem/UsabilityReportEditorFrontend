@@ -5,13 +5,18 @@ import produce from 'immer';
 const initialState = {
     loading: true,
     reportList: {},
-    error: null
+    error: null,
+    exportAsPdf: false,
 }
 
 const reportSlice = createSlice({
     name: 'report',
     initialState,
     reducers: {
+        switchExportPdf: (state) => {
+            console.log(state.exportAsPdf);
+            state.exportAsPdf = !state.exportAsPdf;
+        },
     },
     extraReducers: {
         [getAllUserReports.pending]: (state) => {
@@ -61,4 +66,5 @@ const reportSlice = createSlice({
     }
 })
 
+export const { switchExportPdf } = reportSlice.actions
 export default reportSlice.reducer

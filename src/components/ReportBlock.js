@@ -52,6 +52,7 @@ const ReportBlock = ({ item, hasChildren, onToggle, level }) => {
     const [isExpanded, setIsExpanded] = useState(false)
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [deleteWithChildren, setDeleteWithChildren] = useState(false);
+    const [isAbove, setIsAbove] = useState(true);
     const [showTooltip, setShowTooltip] = useState(false);
 
     const [{ isDragging }, drag] = useDrag({
@@ -69,6 +70,9 @@ const ReportBlock = ({ item, hasChildren, onToggle, level }) => {
             onDrop(droppedBlock.block, item, isAbove)
         },
         canDrop: (droppedBlock) => droppedBlock.block.id !== item.id,
+        hover: (droppedBlock, monitor) => {
+            setIsAbove(isDropPositionAbove(monitor, ref));
+        },
         collect: (monitor) => ({
             canDrop: monitor.canDrop(),
             isOver: monitor.isOver(),
@@ -77,17 +81,25 @@ const ReportBlock = ({ item, hasChildren, onToggle, level }) => {
 
     const isDropPositionAbove = (monitor, drop) => {
         const clientOffset = monitor.getClientOffset();
-        console.log(drop);
         const targetRect = drop.current.getBoundingClientRect();
         const targetMiddleY = (targetRect.bottom - targetRect.top) / 2;
         const mousePosition = clientOffset.y - targetRect.top;
         return mousePosition < targetMiddleY; //true - above, false - below
     };
 
-    const style = {
+    const draggedBlockStyle = {
         opacity: isDragging ? 0.5 : 1
     };
 
+    let hoveredBlockClass = "";
+    if (isOver && canDrop){
+        if (isAbove){
+            hoveredBlockClass = " hovered-above"
+        }
+        else{
+            hoveredBlockClass = " hovered-below"
+        }
+    }
     const handleClose = () => setShowConfirmation(false);
     const handleOpen = () => setShowConfirmation(true);
 
@@ -95,6 +107,15 @@ const ReportBlock = ({ item, hasChildren, onToggle, level }) => {
         console.log(dragBlock.id + " " + targetBlock.id + " " + isAbove)
 
         if (canDrop){
+            const requestData = {
+                id: item.id,
+                parentId: targetBlock.parentId,
+                reportId: item.reportId,
+                importReportId: item.importReportId,
+                title: blockTitle,
+                content: blockContent
+            }
+            dispatch(updateReportBlock({id: item.id, reportBlock: requestData}));
             dispatch(moveReportBlock({ movedBlock: dragBlock, targetBlock: targetBlock, isBefore: isAbove }));
         }
     }
@@ -125,7 +146,7 @@ const ReportBlock = ({ item, hasChildren, onToggle, level }) => {
             parentId: item.id,
             reportId: item.reportId,
             importReportId: null,
-            title: 'New block',
+            title: 'Новый блок',
             content: ''
         }
         dispatch(createReportBlock({reportBlock: requestData}));
@@ -150,22 +171,9 @@ const ReportBlock = ({ item, hasChildren, onToggle, level }) => {
     }
 
     drop(ref);
-
     return (
 
-        <Row ref={ref} className={"m-0 position-relative"}>
-            <div className={"report-block-tooltip-hitbox position-absolute mt-4"}>
-                <div className={"position-absolute report-tooltip px-1 text-end"}>
-
-                    {level < 5 ? <img src={add} onClick={createBlock} alt={"add"} className={"icon icon-small"}/>
-                        : <></>}
-                    <img src={pen} onClick={switchEditingMode} alt={"edit"} className={"icon icon-small"}/>
-                    <img src={trash} onClick={handleOpen} alt={"trash"} className={"icon icon-small"}/>
-                </div>
-                <div ref={drag} className={"position-absolute report-tooltip drag-and-drop"}>
-                    <img src={dragAndDrop} alt={"drag"} className={"icon icon-medium"}/>
-                </div>
-            </div>
+        <Row ref={ref} className={"m-0 position-relative report-block-tooltip-hitbox"}>
 
 
             {[...Array(level)].map((x, i) =>
@@ -173,8 +181,19 @@ const ReportBlock = ({ item, hasChildren, onToggle, level }) => {
                     <div className={"document-branch h-100"} style = {{padding: "0px"}} />
                 </Col>
             )}
-            <Col style={style} className={"p-0"}>
-                <div className={containerClassname + " report-block position-relative report-tooltip-container mt-4"}>
+
+            <Col style={draggedBlockStyle} className={"p-0 mt-4"}>
+                {!isEditing &&
+                <div className={"position-absolute report-tooltip px-1 mt-4 text-end"}>
+                    <div ref={drag} className={"d-inline drag-and-drop"}>
+                        <img src={dragAndDrop} alt={"drag"} className={"icon icon-medium me-0"}/>
+                    </div>
+                    {level < 5 ? <img src={add} onClick={createBlock} alt={"add"} className={"icon icon-small"}/>
+                        : <></>}
+                    <img src={pen} onClick={switchEditingMode} alt={"edit"} className={"icon icon-small"}/>
+                    <img src={trash} onClick={handleOpen} alt={"trash"} className={"icon icon-small"}/>
+                </div>}
+                <div className={containerClassname + " report-block position-relative report-tooltip-container " + hoveredBlockClass}>
                     <Modal show={showConfirmation} size="lg" onHide={handleClose} centered>
                         <Modal.Header closeButton>
                             <Modal.Title>Are you sure you want to delete this block?</Modal.Title>
@@ -213,7 +232,7 @@ const ReportBlock = ({ item, hasChildren, onToggle, level }) => {
                         <Col sm={12} className={"p-0 pb-2"}>
                             <div>
                                 {!isEditing ?
-                                    <div className={"ql-editor p-0"} dangerouslySetInnerHTML={sanitizeHtml(blockContent)}/>
+                                    <div onClick={switchEditingMode} className={"ql-editor p-0"} dangerouslySetInnerHTML={sanitizeHtml(blockContent)}/>
                                     : <ReactQuill  className={"p-0"} modules={modules} theme="snow" value={blockContent} onChange={setBlockContent} placeholder="..." />}
                                 <div className={"text-end"}>
                                     {!isEditing ?

@@ -18,7 +18,7 @@ const LoginScreen = () => {
     // redirect authenticated user to profile screen
     useEffect(() => {
         if (userInfo.username) {
-            navigate('/user-profile')
+            navigate('/')
         }
     }, [navigate, userInfo])
 

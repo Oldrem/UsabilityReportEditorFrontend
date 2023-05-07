@@ -69,10 +69,7 @@ const HomePage = () => {
                                     </Card.Body>
                                     <Card.Footer>
                                         <Row>
-                                            <Col xs={"8"}>
-                                                <small className="text-muted">Last updated X mins ago</small>
-                                            </Col>
-                                            <Col xs={"4"} className={"text-end"}>
+                                            <Col xs={"12"} className={"text-end"}>
                                                 <img src={pen} alt={"edit"} className={"icon icon-medium"}/>
                                                 <img src={trash} alt={"trash"} className={"icon icon-medium"} onClick={() => {deleteReportById(report.id)}}/>
                                             </Col>

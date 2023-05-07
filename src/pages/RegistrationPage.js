@@ -20,7 +20,7 @@ const RegistrationPage = () => {
 
     useEffect(() => {
         // redirect authenticated user to profile screen
-        if (userInfo.username) navigate('/user-profile')
+        if (userInfo.username) navigate('/')
         // redirect user to login page if registration was successful
         if (success) {
             dispatch(finishRegistration());
